@@ -30,6 +30,7 @@ class Query:
 
     def __init__(self):
         self.session = Request()
+        self.session.proxies = {'http': None, 'https': None}
         self.request_device_id()
         self.cluster = Cluster()
         self.update_query_interval()
@@ -119,12 +120,12 @@ class Query:
         self.jobs.append(job)
         return job
 
-    def request_device_id(self, force_renew = False):
+    def request_device_id(self, force_renew=False):
         """
         获取加密后的浏览器特征 ID
         :return:
         """
-        expire_time =  self.session.cookies.get('RAIL_EXPIRATION')
+        expire_time = self.session.cookies.get('RAIL_EXPIRATION')
         if not force_renew and expire_time and int(expire_time) - time_int_ms() > 0:
             return
         if 'pjialin' not in API_GET_BROWSER_DEVICE_ID:
@@ -154,7 +155,7 @@ class Query:
 
     def request_device_id2(self):
         headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36"
         }
         self.session.headers.update(headers)
         response = self.session.get(API_GET_BROWSER_DEVICE_ID)
@@ -164,15 +165,15 @@ class Query:
                     result = response.text[18:-2]
                     result = json.loads(result)
                     if not Config().is_cache_rail_id_enabled():
-                       self.session.cookies.update({
-                           'RAIL_EXPIRATION': result.get('exp'),
-                           'RAIL_DEVICEID': result.get('dfp'),
-                       })
+                        self.session.cookies.update({
+                            'RAIL_EXPIRATION': result.get('exp'),
+                            'RAIL_DEVICEID': result.get('dfp'),
+                        })
                     else:
-                       self.session.cookies.update({
-                           'RAIL_EXPIRATION': Config().RAIL_EXPIRATION,
-                           'RAIL_DEVICEID': Config().RAIL_DEVICEID,
-                       })
+                        self.session.cookies.update({
+                            'RAIL_EXPIRATION': Config().RAIL_EXPIRATION,
+                            'RAIL_DEVICEID': Config().RAIL_DEVICEID,
+                        })
             except:
                 return self.request_device_id2()
         else:

@@ -16,6 +16,7 @@ class OCR:
 
     def __init__(self):
         self.session = Request()
+        self.session.proxies = {'http': None, 'https': None}
 
     @classmethod
     def get_img_position(cls, img):

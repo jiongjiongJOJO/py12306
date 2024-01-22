@@ -23,6 +23,7 @@ class AuthCode:
     def __init__(self, session):
         self.data_path = Config().RUNTIME_DIR
         self.session = session
+        self.session.proxies = {'http': None, 'https': None}
 
     @classmethod
     def get_auth_code(cls, session):

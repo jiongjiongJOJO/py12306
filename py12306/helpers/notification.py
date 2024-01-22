@@ -14,6 +14,7 @@ class Notification():
 
     def __init__(self):
         self.session = Request()
+        self.session.proxies = {'http': None, 'https': None}
 
     @classmethod
     def voice_code(cls, phone, name='', content=''):

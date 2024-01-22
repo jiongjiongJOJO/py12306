@@ -166,6 +166,7 @@ class Cdn:
 
     def check_item_available(self, item, try_num=0):
         session = Request()
+        self.session.proxies = {'http': None, 'https': None}
         response = session.get(API_CHECK_CDN_AVAILABLE.format(item), headers={'Host': HOST_URL_OF_12306},
                                timeout=self.check_time_out,
                                verify=False)

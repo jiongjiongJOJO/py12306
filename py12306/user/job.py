@@ -52,6 +52,7 @@ class UserJob:
 
     def init_data(self, info):
         self.session = Request()
+        self.session.proxies = {'http': None, 'https': None}
         self.session.add_response_hook(self.response_login_check)
         self.key = str(info.get('key'))
         self.user_name = info.get('user_name')
